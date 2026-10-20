@@ -15,7 +15,13 @@ npm run build    # gera a versão final optimizada na pasta dist/
 npm run preview  # pré-visualiza a pasta dist/
 ```
 
-Para publicar, envie o **conteúdo da pasta `dist/`** para o alojamento. As rotas usam `#/` (ex.: `#/contactos`), por isso não é preciso configurar o servidor.
+As rotas usam `#/` (ex.: `#/contactos`), por isso não é preciso configurar o servidor.
+
+## Publicação (GitHub → Hostinger)
+
+Cada envio para o ramo `main` corre o fluxo `.github/workflows/deploy.yml`, que compila o site e coloca o resultado (pasta `dist/`) no ramo **`hostinger`**. A Hostinger (hPanel → Avançado → **Git**) está ligada a esse ramo e copia-o para `public_html`; com a **implementação automática** (webhook no GitHub), o site actualiza-se sozinho após cada envio.
+
+Em alternativa, envie manualmente o **conteúdo da pasta `dist/`** para `public_html`.
 
 ## Estrutura
 

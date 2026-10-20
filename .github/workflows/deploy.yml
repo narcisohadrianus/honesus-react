@@ -1,0 +1,38 @@
+# Compila o site e publica o resultado (pasta dist/) no ramo "hostinger".
+# A Hostinger (hPanel → Avançado → Git) vai buscar esse ramo para a pasta public_html.
+name: Publicar para a Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # permite correr manualmente no separador "Actions"
+
+permissions:
+  contents: write # necessário para escrever no ramo "hostinger"
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Publicar dist/ no ramo hostinger
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: hostinger
+          publish_dir: ./dist
+          force_orphan: true # o ramo guarda só a versão actual, sem histórico
+          commit_message: "Publicação automática"
